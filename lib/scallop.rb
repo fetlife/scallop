@@ -31,6 +31,11 @@ class Scallop
     def success?
       status.success?
     end
+
+    # stdout & stderr combined
+    def output
+      @_output ||= [stdout, stderr].reject { |s| s.nil? || s.empty? }.join("\n")
+    end
   end
 
   class << self
@@ -48,8 +53,13 @@ class Scallop
     self
   end
 
-  def cmd(cmd)
-    @cmd = cmd.to_s
+  def cmd(*cmd)
+    @cmd =
+      [*cmd]
+        .map(&:to_s)
+        .map(&Shellwords.method(:escape))
+        .join(" ")
+
     self
   end
 
