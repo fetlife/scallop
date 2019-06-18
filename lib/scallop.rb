@@ -98,6 +98,7 @@ class Scallop
 
     cmd =
       [*@cmd]
+        .flatten
         .map do |cmd_part|
           case cmd_part
           when Param

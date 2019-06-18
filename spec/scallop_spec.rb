@@ -7,6 +7,7 @@ RSpec.describe Scallop do
       expect(Scallop.cmd("ls", "/home/scallop").to_command).to eq "ls /home/scallop"
       expect(Scallop.sudo(:chucknorris).cmd(:rm, "-rf", "/").to_command).to eq "sudo -u chucknorris rm -rf /"
       expect(Scallop.sudo.cmd("ls").to_command).to eq "sudo ls"
+      expect(Scallop.cmd(:echo, %w(1 2 3)).to_command).to eq "echo 1 2 3"
     end
 
     specify "escaping" do
