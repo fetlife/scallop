@@ -25,7 +25,7 @@ class Scallop
 
     def self.from_capture3(result)
       stdout, stderr, status = result
-      new(stdout: stdout, stderr: stderr, status: status)
+      new(stdout: stdout.strip, stderr: stderr.strip, status: status)
     end
 
     def success?
