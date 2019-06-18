@@ -20,4 +20,4 @@ Or install it yourself as:
 
 ## Usage
 
-(See specs)[./spec/scallop_spec.rb]
+[See specs](./spec/scallop_spec.rb)
