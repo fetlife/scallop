@@ -12,6 +12,22 @@ RSpec.describe Scallop do
     specify "escaping" do
       expect(Scallop.cmd("ls", "/path to/awesome file").to_command).to eq  "ls /path\\ to/awesome\\ file"
     end
+
+    specify "parametrization" do
+      expect(Scallop.cmd(:echo, Scallop.param(:foo)).set(foo: "bar").to_command).to eq "echo bar"
+    end
+
+    specify "error on missing command" do
+      expect do
+        Scallop.sudo(:chucknorris).to_command
+      end.to raise_error(Scallop::Errors::ValidationFailed)
+    end
+
+    specify "error on missing parameters" do
+      expect do
+        Scallop.cmd(:echo, Scallop.param(:foo)).to_command
+      end.to raise_error(Scallop::Errors::ValidationFailed)
+    end
   end
 
   describe "#run" do

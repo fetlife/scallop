@@ -19,9 +19,9 @@ class Scallop
   end
 
   class Result < Hashie::Dash
-    property :stdout
-    property :stderr
-    property :status
+    property :stdout, required: true
+    property :stderr, required: true
+    property :status, required: true
 
     def self.from_capture3(result)
       stdout, stderr, status = result
@@ -38,6 +38,10 @@ class Scallop
     end
   end
 
+  class Param < Hashie::Dash
+    property :key, required: true
+  end
+
   class << self
     DSL_METHODS = %i{ cmd run run! sudo }
 
@@ -46,6 +50,14 @@ class Scallop
         new.public_send(method, *args)
       end
     end
+
+    def param(key)
+      Param.new(key: key)
+    end
+  end
+
+  def initialize
+    @params = {}
   end
 
   def sudo(sudo = true)
@@ -54,17 +66,17 @@ class Scallop
   end
 
   def cmd(*cmd)
-    @cmd =
-      [*cmd]
-        .map(&:to_s)
-        .map(&Shellwords.method(:escape))
-        .join(" ")
+    @cmd = cmd
+    self
+  end
 
+  def set(params)
+    @params.merge!(params)
     self
   end
 
   def to_command
-    raise ValidationFailed.new("cmd missing") if @cmd.nil?
+    raise Errors::ValidationFailed.new("cmd missing") if @cmd.nil?
 
     prefix =
       case @sudo
@@ -73,7 +85,22 @@ class Scallop
       else nil
       end
 
-    [prefix, @cmd].compact.join(" ")
+    cmd =
+      [*@cmd]
+        .map do |cmd_part|
+          case cmd_part
+          when Param
+            @params[cmd_part.key].tap do |value|
+              raise Errors::ValidationFailed.new("value for param '#{cmd_part.key}' not set") if value.nil?
+            end
+          else
+            cmd_part.to_s
+          end
+        end
+        .map(&Shellwords.method(:escape))
+        .join(" ")
+
+    [prefix, cmd].compact.join(" ")
   end
 
   def run
