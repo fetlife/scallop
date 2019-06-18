@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    scallop (0.1.0)
+    scallop (0.3.0)
       hashie (~> 3.0)
 
 GEM

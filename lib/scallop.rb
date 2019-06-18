@@ -61,18 +61,29 @@ class Scallop
   end
 
   def sudo(sudo = true)
-    @sudo = sudo
-    self
+    dup
+      .tap do |instance|
+        instance.instance_eval { @sudo = sudo }
+      end
+      .freeze
   end
 
   def cmd(*cmd)
-    @cmd = cmd
-    self
+    dup
+      .tap do |instance|
+        instance.instance_eval { @cmd = cmd }
+      end
+      .freeze
   end
 
   def set(params)
-    @params.merge!(params)
-    self
+    new_params = @params.merge(params)
+
+    dup
+      .tap do |instance|
+        instance.instance_eval { @params = new_params }
+      end
+      .freeze
   end
 
   def to_command
