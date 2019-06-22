@@ -1,5 +1,13 @@
 version: 2.1
 
+workflows:
+  main:
+    jobs:
+      - ruby26
+      - ruby25
+      - ruby24
+      - ruby23
+
 executors:
   ruby26:
     docker:
