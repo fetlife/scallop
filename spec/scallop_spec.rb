@@ -15,13 +15,13 @@ RSpec.describe Scallop do
     end
 
     specify "parametrization" do
-      expect(Scallop.cmd(:echo, Scallop.param(:foo)).set(foo: "bar").to_command).to eq "echo bar"
+      expect(Scallop.cmd(:echo, Scallop::Param[:foo]).set(foo: "bar").to_command).to eq "echo bar"
     end
 
     specify "parametrization merging" do
       expect(
         Scallop
-          .cmd(:echo, Scallop.param(:foo), Scallop.param(:bar))
+          .cmd(:echo, Scallop::Param[:foo], Scallop::Param[:bar])
           .set(foo: "foo")
           .set(bar: "bar")
           .to_command
@@ -36,7 +36,7 @@ RSpec.describe Scallop do
 
     specify "error on missing parameters" do
       expect do
-        Scallop.cmd(:echo, Scallop.param(:foo)).to_command
+        Scallop.cmd(:echo, Scallop::Param[:foo]).to_command
       end.to raise_error(Scallop::Errors::ValidationFailed)
     end
 
@@ -47,7 +47,7 @@ RSpec.describe Scallop do
       expect(cmd1.to_command).to eq "ls"
       expect(cmd2.to_command).to eq "sudo -u chucknorris ls"
 
-      cmd3 = Scallop.cmd(:echo, Scallop.param(:foo))
+      cmd3 = Scallop.cmd(:echo, Scallop::Param[:foo])
       cmd4 = cmd3.set(foo: "bar")
       cmd5 = cmd3.set(foo: "foo")
 

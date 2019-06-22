@@ -1,3 +1,3 @@
-class Scallop
-  VERSION = "0.4.0"
+module Scallop
+  VERSION = "0.5.0"
 end
