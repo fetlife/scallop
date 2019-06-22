@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  rspec:
+  build:
     parallelism: 1
     docker:
       - image: circleci/ruby:2.5
