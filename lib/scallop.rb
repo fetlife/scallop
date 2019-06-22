@@ -2,6 +2,7 @@
 
 require 'benchmark'
 require 'open3'
+require 'shellwords'
 
 require 'scallop/command_builder'
 require 'scallop/errors'
