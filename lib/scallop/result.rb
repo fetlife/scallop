@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Scallop
+  # Represents a result of command execution.
   class Result
     attr_reader :stdout
     attr_reader :stderr

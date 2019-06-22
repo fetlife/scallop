@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
+# :nodoc:
 module Scallop
+  # Adds ergonomic public API methods.
   module PublicAPI
     METHODS = %i[cmd sudo].freeze
 
@@ -8,6 +10,7 @@ module Scallop
       base.extend ClassMethods
     end
 
+    # :nodoc:
     module ClassMethods
       METHODS.each do |method|
         define_method(method) do |*args|
@@ -16,4 +19,6 @@ module Scallop
       end
     end
   end
+
+  include PublicAPI
 end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Scallop
+  # Implements command building interface with immutability.
   class CommandBuilder
     def initialize
       @params = {}

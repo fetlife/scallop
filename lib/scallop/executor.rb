@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Scallop
+  # Executes command and returns result.
   module Executor
     def self.run(command)
       capture3, timing = measure do

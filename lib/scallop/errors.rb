@@ -2,6 +2,7 @@
 
 module Scallop
   module Errors
+    # Error representing command failure.
     class CommandFailed < StandardError
       attr_reader :result
 
@@ -11,6 +12,7 @@ module Scallop
       end
     end
 
+    # Error representing absense of required parameters or incorrect usage
     class ValidationFailed < StandardError
     end
   end
