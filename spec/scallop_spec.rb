@@ -54,6 +54,20 @@ RSpec.describe Scallop do
       expect(cmd4.to_command).to eq "echo bar"
       expect(cmd5.to_command).to eq "echo foo"
     end
+
+    specify "piping" do
+      cmd = Scallop.cmd(:ls, "/home") | Scallop.cmd(:grep, "chuck")
+      expect(cmd.to_command).to eq "ls /home | grep chuck"
+    end
+
+    specify "timing" do
+      result = Scallop.cmd(:ls, "/tmp").run!
+
+      expect(result.timing.real).to be > 0.0
+      expect(result.timing.stime).to be > 0.0
+      expect(result.timing.utime).to be > 0.0
+      expect(result.timing.total).to be > 0.0
+    end
   end
 
   describe "#run" do

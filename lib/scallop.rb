@@ -1,3 +1,4 @@
+require "benchmark"
 require "hashie"
 require "open3"
 
@@ -22,6 +23,11 @@ class Scallop
     property :stdout, required: true
     property :stderr, required: true
     property :status, required: true
+    property :timing
+
+    def self.from_capture3_and_timing(result, timing)
+      from_capture3(result).merge(timing: timing)
+    end
 
     def self.from_capture3(result)
       stdout, stderr, status = result
@@ -58,6 +64,7 @@ class Scallop
 
   def initialize
     @params = {}
+    @cmd = []
   end
 
   def sudo(sudo = true)
@@ -71,7 +78,7 @@ class Scallop
   def cmd(*cmd)
     dup
       .tap do |instance|
-        instance.instance_eval { @cmd = cmd }
+        instance.instance_eval { @cmd += cmd }
       end
       .freeze
   end
@@ -87,7 +94,7 @@ class Scallop
   end
 
   def to_command
-    raise Errors::ValidationFailed.new("cmd missing") if @cmd.nil?
+    raise Errors::ValidationFailed.new("cmd missing") if @cmd.empty?
 
     prefix =
       case @sudo
@@ -102,14 +109,17 @@ class Scallop
         .map do |cmd_part|
           case cmd_part
           when Param
-            @params[cmd_part.key].tap do |value|
-              raise Errors::ValidationFailed.new("value for param '#{cmd_part.key}' not set") if value.nil?
-            end
+            @params[cmd_part.key]
+              .tap do |value|
+                raise Errors::ValidationFailed.new("value for param '#{cmd_part.key}' not set") if value.nil?
+              end
+              .yield_self(&Shellwords.method(:escape))
+          when :|
+            cmd_part
           else
-            cmd_part.to_s
+            cmd_part.to_s.yield_self(&Shellwords.method(:escape))
           end
         end
-        .map(&Shellwords.method(:escape))
         .join(" ")
 
     [prefix, cmd].compact.join(" ")
@@ -117,13 +127,33 @@ class Scallop
 
   def run
     to_command
-      .yield_self(&Open3.method(:capture3))
-      .yield_self(&Result.method(:from_capture3))
+      .yield_self do |command|
+        measure do
+          Open3.capture3(command)
+        end
+      end
+      .yield_self do |capture3, timing|
+        Result.from_capture3_and_timing(capture3, timing)
+      end
+  end
+
+  def measure
+    result = nil
+    timing = Benchmark.measure { result = yield }
+    [result, timing]
   end
 
   def run!
     run.tap do |result|
       raise Errors::CommandFailed.new(result.stderr, result) unless result.success?
     end
+  end
+
+  def get_cmd
+    @cmd
+  end
+
+  def |(other)
+    cmd(:|, other.get_cmd)
   end
 end
