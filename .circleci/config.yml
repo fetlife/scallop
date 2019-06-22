@@ -30,5 +30,11 @@ jobs:
           command: |
             bundle exec rspec --format documentation --format RspecJunitFormatter --out test_results/rspec.xml
 
+      - run:
+          name: Report Test Coverage
+          command: |
+            cc-test-reporter format-coverage -t simplecov -o coverage/codeclimate.json coverage/.resultset.json
+            cc-test-reporter upload-coverage -i coverage/codeclimate.json
+
       - store_test_results:
           path: test_results
