@@ -15,6 +15,7 @@ Features:
 * Failure handling
 * Parameterization
 * Measuring execution time
+* Built-in string escaping
 * No dependencies
 
 ## Installation
