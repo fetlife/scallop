@@ -61,7 +61,7 @@ RSpec.describe Scallop do
     end
 
     specify "timing" do
-      result = Scallop.cmd(:ls, "/tmp").run!
+      result = Scallop.cmd(:ps, "-ef").run!
 
       expect(result.timing.real).to be > 0.0
       expect(result.timing.stime).to be > 0.0
