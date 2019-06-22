@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  rspec:
     parallelism: 1
     docker:
       - image: circleci/ruby:2.5
@@ -8,7 +8,7 @@ jobs:
           BUNDLE_JOBS: 3
           BUNDLE_RETRY: 3
           BUNDLE_PATH: vendor/bundle
-          
+
     steps:
       - checkout
 
@@ -26,7 +26,7 @@ jobs:
             - vendor/bundle
 
       - run:
-          name: Run rspec in parallel
+          name: Run rspec
           command: |
             bundle exec rspec --format documentation --format RspecJunitFormatter --out test_results/rspec.xml
 
