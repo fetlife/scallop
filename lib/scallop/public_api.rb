@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module Scallop
   module PublicAPI
-    METHODS = %i{ cmd sudo }
+    METHODS = %i[cmd sudo].freeze
 
     def self.included(base)
       base.extend ClassMethods

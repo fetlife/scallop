@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Scallop
   class Result
     attr_reader :stdout

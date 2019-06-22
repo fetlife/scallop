@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Scallop
   class CommandBuilder
     def initialize
@@ -21,7 +23,7 @@ module Scallop
         .freeze
     end
 
-    def get_cmd
+    def read_cmd
       @cmd
     end
 
@@ -36,37 +38,7 @@ module Scallop
     end
 
     def |(other)
-      cmd(:|, other.get_cmd)
-    end
-
-    def to_command
-      raise Errors::ValidationFailed.new("cmd missing") if @cmd.empty?
-
-      prefix =
-        case @sudo
-        when true then "sudo"
-        when String, Symbol then "sudo -u #{@sudo}"
-        else nil
-        end
-
-      cmd =
-        [*@cmd]
-          .flatten
-          .map do |cmd_part|
-            case cmd_part
-            when Param
-              value = @params[cmd_part.key]
-              raise Errors::ValidationFailed.new("value for param '#{cmd_part.key}' not set") if value.nil?
-              Shellwords.escape(value.to_s)
-            when :|
-              cmd_part
-            else
-              Shellwords.escape(cmd_part.to_s)
-            end
-          end
-          .join(" ")
-
-      [prefix, cmd].compact.join(" ")
+      cmd(:|, other.read_cmd)
     end
 
     def run
@@ -75,6 +47,40 @@ module Scallop
 
     def run!
       Executor.run!(to_command)
+    end
+
+    def to_command
+      raise Errors::ValidationFailed, 'cmd missing' if @cmd.empty?
+
+      [build_prefix, build_command].compact.join(' ')
+    end
+
+    private
+
+    def build_prefix
+      case @sudo
+      when true then 'sudo'
+      when String, Symbol then "sudo -u #{@sudo}"
+      end
+    end
+
+    def build_command
+      [*@cmd]
+        .flatten
+        .map do |cmd_part|
+          case cmd_part
+          when Param
+            value = @params[cmd_part.key]
+            raise Errors::ValidationFailed, "value for param '#{cmd_part.key}' not set" if value.nil?
+
+            Shellwords.escape(value.to_s)
+          when :|
+            cmd_part
+          else
+            Shellwords.escape(cmd_part.to_s)
+          end
+        end
+        .join(' ')
     end
   end
 end

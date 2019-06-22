@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Scallop
   module Executor
     def self.run(command)
