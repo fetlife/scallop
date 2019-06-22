@@ -63,10 +63,10 @@ RSpec.describe Scallop do
     specify "timing" do
       result = Scallop.cmd(:ps, "-ef").run!
 
-      expect(result.timing.real).to be > 0.0
-      expect(result.timing.stime).to be > 0.0
-      expect(result.timing.utime).to be > 0.0
-      expect(result.timing.total).to be > 0.0
+      expect(result.timing.real).to be_a Float
+      expect(result.timing.stime).to be_a Float
+      expect(result.timing.utime).to be_a Float
+      expect(result.timing.total).to be_a Float
     end
   end
 
