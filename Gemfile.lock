@@ -26,6 +26,8 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
+    rspec_junit_formatter (0.4.1)
+      rspec-core (>= 2, < 4, != 2.12.0)
 
 PLATFORMS
   ruby
@@ -35,6 +37,7 @@ DEPENDENCIES
   pry (~> 0.12)
   rake (~> 10.0)
   rspec (~> 3.0)
+  rspec_junit_formatter (~> 0.4)
   scallop!
 
 BUNDLED WITH
