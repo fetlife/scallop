@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['FetLife']
   spec.email         = ['dev@fetlife.com']
 
-  spec.summary       = 'Simple shell wrapper'
-  spec.description   = 'Simple shell wrapper'
+  spec.summary       = 'Ergonomic shell wrapper.'
+  spec.description   = 'Ergonomic shell wrapper.'
   spec.homepage      = 'https://github.com/fetlife/scallop'
   spec.license       = 'MIT'
 
