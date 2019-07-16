@@ -99,6 +99,11 @@ RSpec.describe Scallop do
       expect(result.output).to include('No such file or directory')
       expect(result.success?).to eq false
     end
+
+    specify 'working directory specified' do
+      expect(Open3).to receive(:capture3).with("ls -l", chdir: "/some/path")
+      Scallop.cmd(:ls, "-l").run(chdir: "/some/path")
+    end
   end
 
   describe '#run!' do
