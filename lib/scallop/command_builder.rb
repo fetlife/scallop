@@ -42,8 +42,8 @@ module Scallop
       cmd(:|, other.read_cmd)
     end
 
-    def run
-      Executor.run(to_command)
+    def run(args = {})
+      Executor.run(to_command, args)
     end
 
     def run!
