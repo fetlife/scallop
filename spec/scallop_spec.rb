@@ -104,6 +104,12 @@ RSpec.describe Scallop do
       expect(Open3).to receive(:capture3).with("ls -l", chdir: "/some/path")
       Scallop.cmd(:ls, "-l").run(chdir: "/some/path")
     end
+
+    specify 'passing custom environment variables' do
+      env_vars = { 'FOO' => 'BAR' }
+      expect(Open3).to receive(:capture3).with(env_vars, "ls -l")
+      Scallop.cmd(:ls, "-l").run(env: env_vars)
+    end
   end
 
   describe '#run!' do
