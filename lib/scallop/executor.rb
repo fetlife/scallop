@@ -5,7 +5,11 @@ module Scallop
   module Executor
     def self.run(command, args = {})
       capture3, timing = measure do
-        Open3.capture3(command, args)
+        if args[:env]
+          Open3.capture3(args.delete(:env), command, args)
+        else
+          Open3.capture3(command, args)
+        end
       end
       build_result(capture3, timing)
     end
